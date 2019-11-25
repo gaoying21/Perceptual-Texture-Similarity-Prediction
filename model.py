@@ -154,16 +154,10 @@ class SL(object):
         labels = np.array(labels)
         labels = labels[shuffled_index]
         
-        #testpairs = imagepairs[100000:101475]
-        #testpairscon = filepairscon[100000:101475]
         imagepairs = imagepairs[0:80200]
         filepairscon = filepairscon[0:80200]
-        #imagepairs = imagepairs[0:45150]
-        #filepairscon = filepairscon[0:45150]
-       
-        #testlabels = labels[100000:101475]
+        
         labels = labels[0:80200]
-        #labels = labels[0:45150]
         num_batches = len(imagepairs)//self.batch_size
         with tf.device('/gpu:0'):
             # batch_norm_params = {'decay': BATCHNORM_MOVING_AVERAGE_DECAY,'epsilon': 1e-5}
@@ -268,31 +262,6 @@ class SL(object):
             if step % 100 == 0:
                 summary_str = sess.run(summary_op, feed_dict={self.images1: batch1, self.images2: batch2,self.contour1: batchcon1, self.contour2: batchcon2, self.y: batch_labels})
                 summary_writer.add_summary(summary_str, step)
-                
-                #result = []
-                
-                #for i in range(1):
-                    #batch_files_test = testpairs[i*self.batch_size:(i+1)*self.batch_size]
-                    #batch_files1_test,batch_files2_test = zip(*batch_files_test)
-                    #batch1_test = np.array([get_image(batch_files_test) for batch_files_test in batch_files1_test])
-                    #batch2_test = np.array([get_image(batch_files_test) for batch_files_test in batch_files2_test]) 
-                    #batch1_test = np.expand_dims(batch1_test,3)
-                    #batch2_test = np.expand_dims(batch2_test,3)
-                    
-                    #batch_filescon_test = testpairscon[i*self.batch_size:(i+1)*self.batch_size]
-                    #batch_filescon1_test,batch_filescon2_test = zip(*batch_filescon_test)
-                    #batchcon1_test = np.array([get_image(batch_filescon_test) for batch_filescon_test in batch_filescon1_test])
-                    #batchcon2_test = np.array([get_image(batch_filescon_test) for batch_filescon_test in batch_filescon2_test]) 
-                    #batchcon1_test = np.expand_dims(batchcon1_test,3)
-                    #batchcon2_test = np.expand_dims(batchcon2_test,3)
-                    
-                    #batch_labels_test = np.array(testlabels[i*self.batch_size:(i+1)*self.batch_size])
-                    #batch_labels_test = np.expand_dims(batch_labels_test,1)
-                                       
-                    # result.append(sess.run(self.similarity, feed_dict={self.images1: batch1, self.images2: batch2,self.contour1: batchcon1, self.contour2: batchcon2}))
-                 #   result = sess.run(self.similarity, feed_dict={self.images1: batch1, self.images2: batch2})
-               # np.savetxt("pred_sim.csv", result, delimiter=",")
-               # np.savetxt("true_sim.csv", batch_labels, delimiter=",")
         
             # Save the model checkpoint periodically.
             if step % 5000 == 0 or (step + 1) == FLAGS.max_steps:
